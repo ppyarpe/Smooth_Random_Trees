@@ -290,35 +290,42 @@ import sklearn.metrics
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler    
     
-adult = pd.read_csv('adult.csv')
+# adult = pd.read_csv('adult.csv')
 
-#Read in dataset
+# #Read in dataset
 
-variables_adu=(adult.columns)
+# variables_adu=(adult.columns)
 
-#transform categorical variables to be compatible with LightGBM
-X = adult.drop(columns=['income'])
-#X=X.drop(columns=[variables_dia[0]])
-y=adult.income.to_frame()
-for c in X.columns:
-    col_type = X[c].dtype
-    if col_type == 'object' or col_type.name == 'category':
-        X[c] = X[c].astype('category')
+# #transform categorical variables to be compatible with LightGBM
+# X = adult.drop(columns=['income'])
+# #X=X.drop(columns=[variables_dia[0]])
+# y=adult.income.to_frame()
+# for c in X.columns:
+#     col_type = X[c].dtype
+#     if col_type == 'object' or col_type.name == 'category':
+#         X[c] = X[c].astype('category')
     
-y.loc[y['income']=='>50K','income']=1
-y.loc[y['income']=='<=50K','income']=0
-y=y.values.ravel()
+# y.loc[y['income']=='>50K','income']=1
+# y.loc[y['income']=='<=50K','income']=0
+# y=y.values.ravel()
 
 
-X = X.drop(columns=['age','workclass','fnlwgt','education','marital-status','occupation','capital-loss','race','gender','native-country','hours-per-week'])    
+# X = X.drop(columns=['age','workclass','fnlwgt','education','marital-status','occupation','capital-loss','race','gender','native-country','hours-per-week'])    
 
-data = pd.concat([pd.DataFrame(y), X], axis=1)
-train,test= train_test_split(data, test_size=0.20, random_state=314)
+# data = pd.concat([pd.DataFrame(y), X], axis=1)
+# train,test= train_test_split(data, test_size=0.20, random_state=314)
 
+# train = train.values.tolist()
+# test = test.values.tolist()
+
+## Read in already divided train and test datasets
+train = pd.read_csv('train.csv',index_col=False)
+train = train.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])    
 train = train.values.tolist()
+
+test = pd.read_csv('test.csv',index_col=False)
+test = test.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])
 test = test.values.tolist()
-
-
 
 # forest_testing = DP_Random_Forest(train, test, [2,], 10, 0.1)
 # print('accuracy = '+str(forest_testing._accuracy))
@@ -328,38 +335,23 @@ test = test.values.tolist()
 
 perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
-
-
-total_budgets_list = [0.1,0.5,1,2,4,6,8,10]
-
+total_budgets_list = np.logspace(-1, 1, 20)
+#[0.1,0.5,1,2,4,6,8,10]
+ntree=10
 
 for total_budget in total_budgets_list:
-    forest_testing = DP_Random_Forest(train, test, [2,], 100, total_budget)
+    forest_testing = DP_Random_Forest(train, test, [2,], ntree, total_budget)
     print(total_budget)
     perf = perf.append({'Budget': total_budget,'Accuracy':forest_testing._accuracy}, ignore_index=True)
-    
+    output_path='testing_3v/'+str(ntree)+'_trees/y_pred_full_budget_'+str(total_budget)+'.csv'
+    y_pred=pd.DataFrame(forest_testing._predicted_labels)  
+    y_pred.to_csv(output_path)
+
 
 import matplotlib.pyplot as plt
-plt.plot(perf['Budget'],perf['Accuracy'])
-plt.axis([0,16,0.7,0.9])
+plt.plot(perf['Budget'],perf['Accuracy'],'--',label='Accuracy')
+plt.scatter(perf['Budget'],perf['Accuracy'],s=20)
+plt.axis([0,10,0.7,0.8])
+plt.xlabel("Privacy Loss")
+plt.legend()
 plt.show()
-
-# train,test= train_test_split(data, test_size=0.20, random_state=314)
-
-
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=314)
-
-# scaler1 = MinMaxScaler(feature_range=(-1,1))
-# scaler1.fit(y_test.reshape(-1,1))
-# y_test = (scaler1.transform(y_test.reshape(-1,1)))
-
-
-# scaler = MinMaxScaler(feature_range=(-1,1))
-# scaler.fit(y_train.reshape(-1,1))
-# y_train =( scaler.transform(y_train.reshape(-1,1)))
-# y_train.reshape(-1)
-# #X_train=np.array(X_train)
-# y_train=np.array(y_train)
-
-# #X_train=X_train.ravel()
-# y_train=y_train.ravel()

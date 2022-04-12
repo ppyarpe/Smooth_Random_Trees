@@ -319,9 +319,9 @@ from sklearn.preprocessing import MinMaxScaler
 # test = test.values.tolist()
 
 # train_out=pd.DataFrame(train)  
-# train_out.to_csv('train.csv')
+# train_out.to_csv('train.csv',index=False)
 # test_out=pd.DataFrame(test)  
-# test_out.to_csv('test.csv')
+# test_out.to_csv('test.csv',index=False)
 
 ## Read in already divided train and test datasets
 train = pd.read_csv('train.csv')
@@ -334,7 +334,8 @@ perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
 
 
-total_budgets_list = [0.1,0.5,1,2,4,6,8,10]
+total_budgets_list = np.logspace(-1, 1, 20)
+#[0.1,0.5,1,2,4,6,8,10]
 ntree=10
 
 for total_budget in total_budgets_list:
