@@ -269,15 +269,15 @@ class Tree(DP_Random_Forest):
 
 
 ''' A toy example of how to call the class '''
-#if __name__ == '__main__':
-#    data = [
-#        [1,'a',12,3,14],
-#        [1,'a',12,3,4],
-#        [1,'a',12,3,4],
-#        [0,'a',2,13,4],
-#        [0,'b',2,13,14],
-#        [0,'b',2,3,14],
-#        ]
+if __name__ == '__main__':
+    data = [
+        [1,'a',12,3,14],
+        [1,'a',12,3,4],
+        [1,'a',12,3,4],
+        [0,'a',2,13,4],
+        [0,'b',2,13,14],
+        [0,'b',2,3,14],
+        ]
 
-#    forest = DP_Random_Forest(data[1:], data, [1,], 2, 0.1)
-#    print('accuracy = '+str(forest._accuracy))
+    forest = DP_Random_Forest(data[1:], data, [1,], 2, 0.1)
+    print('accuracy = '+str(forest._accuracy))
