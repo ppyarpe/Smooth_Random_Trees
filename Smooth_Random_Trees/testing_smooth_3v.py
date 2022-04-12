@@ -351,7 +351,7 @@ for total_budget in total_budgets_list:
 import matplotlib.pyplot as plt
 plt.plot(perf['Budget'],perf['Accuracy'],'--',label='Accuracy')
 plt.scatter(perf['Budget'],perf['Accuracy'],s=20)
-plt.axis([0,10,0.7,0.8])
+plt.axis([0,10,0.7,1])
 plt.xlabel("Privacy Loss")
 plt.legend()
 plt.show()
