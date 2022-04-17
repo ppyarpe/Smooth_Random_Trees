@@ -337,7 +337,7 @@ perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
 total_budgets_list = np.logspace(-1, 1, 20)
 #[0.1,0.5,1,2,4,6,8,10]
-ntree=10
+ntree=50
 
 for total_budget in total_budgets_list:
     forest_testing = DP_Random_Forest(train, test, [1,3,4], ntree, total_budget)
@@ -351,7 +351,7 @@ for total_budget in total_budgets_list:
 import matplotlib.pyplot as plt
 plt.plot(perf['Budget'],perf['Accuracy'],'--',label='Accuracy')
 plt.scatter(perf['Budget'],perf['Accuracy'],s=20)
-plt.axis([0,10,0.7,0.85])
+plt.axis([0,10,0.7,1])
 plt.xlabel("Privacy Loss")
 plt.legend()
 plt.show()

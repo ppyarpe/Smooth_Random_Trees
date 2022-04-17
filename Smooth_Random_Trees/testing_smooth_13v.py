@@ -337,13 +337,13 @@ perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
 total_budgets_list = np.logspace(-1, 1, 20)
 #[0.1,0.5,1,2,4,6,8,10]
-ntree=10
+ntree=50
 
 for total_budget in total_budgets_list:
     forest_testing = DP_Random_Forest(train, test, [2,4,6,7,8,9,10], ntree, total_budget)
     print(total_budget)
     perf = perf.append({'Budget': total_budget,'Accuracy':forest_testing._accuracy}, ignore_index=True)
-    output_path='testing_13n                                                   qaaav/'+str(ntree)+'_trees/y_pred_full_budget_'+str(total_budget)+'.csv'
+    output_path='testing_13v/'+str(ntree)+'_trees/y_pred_full_budget_'+str(total_budget)+'.csv'
     y_pred=pd.DataFrame(forest_testing._predicted_labels)  
     y_pred.to_csv(output_path)
 

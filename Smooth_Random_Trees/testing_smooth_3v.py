@@ -337,7 +337,7 @@ perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
 total_budgets_list = np.logspace(-1, 1, 20)
 #[0.1,0.5,1,2,4,6,8,10]
-ntree=10
+ntree=50
 
 for total_budget in total_budgets_list:
     forest_testing = DP_Random_Forest(train, test, [2,], ntree, total_budget)
