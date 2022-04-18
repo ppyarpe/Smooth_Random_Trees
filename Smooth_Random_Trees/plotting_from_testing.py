@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import sklearn.metrics
 
 total_budgets_list = np.logspace(-1, 1, 20)
-ntree=50
+ntree=10
 variables=['3','5','6','7','8','9','10','11','12','13','14']
 
 test = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/test.csv')
