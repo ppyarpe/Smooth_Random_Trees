@@ -335,7 +335,7 @@ perf=pd.DataFrame(columns=['Budget','Accuracy'])
 
 
 total_budgets_list = np.logspace(-1, 1, 20)
-#[0.1,0.5,1,2,4,6,8,10]
+
 ntree=50
 
 for total_budget in total_budgets_list:
@@ -357,22 +357,3 @@ plt.axis([0,10,0.7,1])
 plt.xlabel("Privacy Loss")
 plt.legend()
 plt.show()
-# train,test= train_test_split(data, test_size=0.20, random_state=314)
-
-
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=314)
-
-# scaler1 = MinMaxScaler(feature_range=(-1,1))
-# scaler1.fit(y_test.reshape(-1,1))
-# y_test = (scaler1.transform(y_test.reshape(-1,1)))
-
-
-# scaler = MinMaxScaler(feature_range=(-1,1))
-# scaler.fit(y_train.reshape(-1,1))
-# y_train =( scaler.transform(y_train.reshape(-1,1)))
-# y_train.reshape(-1)
-# #X_train=np.array(X_train)
-# y_train=np.array(y_train)
-
-# #X_train=X_train.ravel()
-# y_train=y_train.ravel()
