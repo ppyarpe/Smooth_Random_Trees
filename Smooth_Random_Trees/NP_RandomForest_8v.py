@@ -36,7 +36,7 @@ x_train=enc.transform(x_train).toarray()
 #enc_test = OneHotEncoder(handle_unknown='ignore')
 #enc_test.fit(x_test)
 
-n_trees=50
+n_trees=10
 
 #No loop
 x_test=enc.transform(x_test).toarray()
@@ -68,5 +68,8 @@ pd.DataFrame(y_pred).to_csv(output_path, index=None)
 acc=sklearn.metrics.accuracy_score(y_test, y_pred)
 roc=sklearn.metrics.roc_auc_score(y_test,y_pred)
 perf = perf.append({'Accuracy':acc,'ROC':roc}, ignore_index=True)
+
+perfy=pd.DataFrame(perf)  
+perfy.to_csv('NP_RandomForest/testing_8v/'+str(n_trees)+'_trees/performance_metrics.csv',index=None)
     
 
