@@ -320,13 +320,11 @@ import matplotlib.pyplot as plt
 # train = train.values.tolist()
 # test = test.values.tolist()
 
-n_variables_list=[3]
-#[3,5,6,7,8,9,10,11,12,13,14]
+n_variables_list=[3,5,6,7,8,9,10,11,12,13,14]
 
-total_budgets_list = [0.5,1]
-#np.logspace(-1, 1, 20)
+total_budgets_list = np.logspace(-1, 1, 20)
 
-n_iter_tot=2
+n_iter_tot=10
 
 ntree=10
 #loop for variable list
@@ -347,6 +345,104 @@ for n_variables in n_variables_list:
         test = test.values.tolist()
 
         cat=[2,]
+    elif n_variables==5:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['1','2','3','7','12','9','10','14','13'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['1','2','3','7','12','9','10','14','13'])
+        test = test.values.tolist()
+        
+        cat=[1,3,4]
+    elif n_variables==6:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['1','2','3','12','9','10','14','13'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['1','2','3','12','9','10','14','13'])
+        test = test.values.tolist()
+        
+        cat=[1,3,4,5]
+    elif n_variables==7:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['2','3','12','9','10','14','13'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['2','3','12','9','10','14','13'])
+        test = test.values.tolist()
+        
+        cat=[2,4,5,6]
+    elif n_variables==8:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['2','3','12','9','10','14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['2','3','12','9','10','14'])
+        test = test.values.tolist()
+        
+        cat=[2,4,5,6]
+    elif n_variables==9:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['2','3','9','10','14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['2','3','9','10','14'])
+        test = test.values.tolist()
+        
+        cat=[2,4,5,6]
+    elif n_variables==10:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['2','9','10','14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['2','9','10','14'])
+        test = test.values.tolist()
+        
+        cat=[3,5,6,7]
+    elif n_variables==11:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['2','9','14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['2','9','14'])
+        test = test.values.tolist()
+        
+        cat=[3,5,6,7,8]
+    elif n_variables==12:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['9','14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['9','14'])
+        test = test.values.tolist()
+        
+        cat=[2,4,6,7,8,9]
+    elif n_variables==13:
+        train = pd.read_csv('train.csv',index_col=False)
+        train = train.drop(columns=['14'])   
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv',index_col=False)
+        test = test.drop(columns=['14'])
+        test = test.values.tolist()
+        
+        cat=[2,4,6,7,8,9,10]
+    elif n_variables==14:
+        train = pd.read_csv('train.csv')
+        train = train.values.tolist()
+
+        test = pd.read_csv('test.csv')
+        test = test.values.tolist()
+        
+        cat=[2,4,6,7,8,9,10,14]
 # forest_testing = DP_Random_Forest(train, test, [2,], 10, 0.1)
 # print('accuracy = '+str(forest_testing._accuracy))
 
@@ -369,7 +465,7 @@ for n_variables in n_variables_list:
        
             forest_testing = DP_Random_Forest(train, test, cat, ntree, total_budget)
         
-            output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'.csv'
+            output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
             output_path_1='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
     
             y_pred=pd.DataFrame(forest_testing._predicted_labels)  
@@ -395,7 +491,7 @@ for n_variables in n_variables_list:
     #perf_np_over=pd.DataFrame([statistics.mean(perf_np['Accuracy']),statistics.mean(perf_np['ROC'])])    
     perf_np_over={'Accuracy':statistics.mean(perf_np['Accuracy']),'ROC':statistics.mean(perf_np['ROC']) } 
     output_path_2='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_NP_'+str(n_iter_tot)+'_iter.csv'
-    perf_np_over.to_csv(output_path_2,index=False)
+   
     
     plt.figure(str(n_variables)+' Variables-Acc') 
     plt.plot(perf_over['Budget'],perf_over['Accuracy'],'--',label='Accuracy')
@@ -405,6 +501,7 @@ for n_variables in n_variables_list:
     plt.xlabel("Privacy Loss")
     plt.legend()
     plt.show()
+    plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/acc_plot_'+str(n_iter_tot)+'_iter.png')
     
     plt.figure(str(n_variables)+' Variables-ROC')   
     plt.plot(perf_over['Budget'],perf_over['ROC'],'--',color='orange',label='ROC')
@@ -414,3 +511,7 @@ for n_variables in n_variables_list:
     plt.xlabel("Privacy Loss")
     plt.legend()
     plt.show()
+    plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/roc_plot_'+str(n_iter_tot)+'_iter.png')
+    
+    perf_np_over=pd.DataFrame(perf_np_over)
+    perf_np_over.to_csv(output_path_2,index=False)
