@@ -320,7 +320,8 @@ import matplotlib.pyplot as plt
 # train = train.values.tolist()
 # test = test.values.tolist()
 
-n_variables_list=[3,5,6,7,8,9,10,11,12,13,14]
+n_variables_list=[14]
+#[3,5,6,7,8,9,10,11,12,13,14]
 
 total_budgets_list = np.logspace(-1, 1, 20)
 
@@ -452,66 +453,69 @@ for n_variables in n_variables_list:
     
     perf_over=pd.DataFrame(columns=['Budget','Accuracy','ROC'])
     perf_np=pd.DataFrame(columns=['Accuracy','ROC'])
+        
 
 #[0.1,0.5,1,2,4,6,8,10]
 
 
-    for total_budget in total_budgets_list:
+    # for total_budget in total_budgets_list:
         
-        perf=pd.DataFrame(columns=['Accuracy','ROC'])
-        y_pred_total=pd.DataFrame()
+    #     perf=pd.DataFrame(columns=['Accuracy','ROC'])
+    #     y_pred_total=pd.DataFrame()
         
-        for n_iter in range (1,n_iter_tot+1):
+    #     for n_iter in range (1,n_iter_tot+1):
        
-            forest_testing = DP_Random_Forest(train, test, cat, ntree, total_budget)
+    #         forest_testing = DP_Random_Forest(train, test, cat, ntree, total_budget)
         
-            output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
-            output_path_1='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
+    #         output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
+  
     
-            y_pred=pd.DataFrame(forest_testing._predicted_labels)  
+    #         y_pred=pd.DataFrame(forest_testing._predicted_labels)  
 
-            perf = perf.append({'Accuracy':forest_testing._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred)}, ignore_index=True)
+    #         perf = perf.append({'Accuracy':forest_testing._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred)}, ignore_index=True)
 
-            y_pred_total=pd.concat([y_pred_total, y_pred], axis=1)
+    #         y_pred_total=pd.concat([y_pred_total, y_pred], axis=1)
             
             
         
-        y_pred_total.to_csv(output_path,index=False)
-        perf_over = perf_over.append({'Budget':total_budget,'Accuracy':statistics.mean(perf['Accuracy']),'ROC':statistics.mean(perf['ROC'])}, ignore_index=True)
-        perf_over.to_csv(output_path_1,index=False)
+    #     y_pred_total.to_csv(output_path,index=False)
+    #     perf_over = perf_over.append({'Budget':total_budget,'Accuracy':statistics.mean(perf['Accuracy']),'ROC':statistics.mean(perf['ROC'])}, ignore_index=True)
+    # output_path_1='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_mean_over_'+str(n_iter_tot)+'_iter.csv'
+    # perf_over.to_csv(output_path_1,index=False)
             
         #getting non private limit
     y_pred_np_total=pd.DataFrame()    
     for n_iter in range (1,n_iter_tot+1):
         forest_testing_np = DP_Random_Forest(train, test, cat, ntree, 1000000000)
         y_pred_np=pd.DataFrame(forest_testing_np._predicted_labels) 
-        y_pred_np_total=pd.concat([y_pred_np_total, y_pred], axis=1)
-        perf_np = perf_np.append({'Accuracy':forest_testing._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred_np)}, ignore_index=True)
+        y_pred_np_total=pd.concat([y_pred_np_total, y_pred_np], axis=1)
+        #perf_np = perf_np.append({'Accuracy':forest_testing._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred_np)}, ignore_index=True)
     
+    y_pred_np_total.to_csv('testing_14v/10_trees/y_pred_total_NP_10_iter.csv',index=False)
     #perf_np_over=pd.DataFrame([statistics.mean(perf_np['Accuracy']),statistics.mean(perf_np['ROC'])])    
-    perf_np_over={'Accuracy':statistics.mean(perf_np['Accuracy']),'ROC':statistics.mean(perf_np['ROC']) } 
-    output_path_2='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_NP_'+str(n_iter_tot)+'_iter.csv'
+    # perf_np_over={'Accuracy':statistics.mean(perf_np['Accuracy']),'ROC':statistics.mean(perf_np['ROC']) } 
+    # output_path_2='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_NP_'+str(n_iter_tot)+'_iter.csv'
    
     
-    plt.figure(str(n_variables)+' Variables-Acc') 
-    plt.plot(perf_over['Budget'],perf_over['Accuracy'],'--',label='Accuracy')
-    plt.scatter(perf_over['Budget'],perf_over['Accuracy'],s=20)
-    plt.axhline(y = perf_np_over['Accuracy'], color = 'grey', linestyle = 'dashed')
-    plt.axis([0,10,0.5,0.9])
-    plt.xlabel("Privacy Loss")
-    plt.legend()
-    plt.show()
-    plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/acc_plot_'+str(n_iter_tot)+'_iter.png')
+    # plt.figure(str(n_variables)+' Variables-Acc') 
+    # plt.plot(perf_over['Budget'],perf_over['Accuracy'],'--',label='Accuracy')
+    # plt.scatter(perf_over['Budget'],perf_over['Accuracy'],s=20)
+    # plt.axhline(y = perf_np_over['Accuracy'], color = 'grey', linestyle = 'dashed')
+    # plt.axis([0,10,0.5,0.9])
+    # plt.xlabel("Privacy Loss")
+    # plt.legend()
+    # plt.show()
+    # plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/acc_plot_'+str(n_iter_tot)+'_iter.png')
     
-    plt.figure(str(n_variables)+' Variables-ROC')   
-    plt.plot(perf_over['Budget'],perf_over['ROC'],'--',color='orange',label='ROC')
-    plt.scatter(perf_over['Budget'],perf_over['ROC'],color='orange',s=20)
-    plt.axhline(y = perf_np_over['ROC'], color = 'grey', linestyle = 'dashed')
-    plt.axis([0,10,0.5,0.8])
-    plt.xlabel("Privacy Loss")
-    plt.legend()
-    plt.show()
-    plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/roc_plot_'+str(n_iter_tot)+'_iter.png')
+    # plt.figure(str(n_variables)+' Variables-ROC')   
+    # plt.plot(perf_over['Budget'],perf_over['ROC'],'--',color='orange',label='ROC')
+    # plt.scatter(perf_over['Budget'],perf_over['ROC'],color='orange',s=20)
+    # plt.axhline(y = perf_np_over['ROC'], color = 'grey', linestyle = 'dashed')
+    # plt.axis([0,10,0.5,0.8])
+    # plt.xlabel("Privacy Loss")
+    # plt.legend()
+    # plt.show()
+    # plt.savefig('testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/roc_plot_'+str(n_iter_tot)+'_iter.png')
     
-    perf_np_over=pd.DataFrame(perf_np_over)
-    perf_np_over.to_csv(output_path_2,index=False)
+    # perf_np_over=pd.DataFrame(perf_np_over.items())
+    # perf_np_over.to_csv(output_path_2,index=False)
