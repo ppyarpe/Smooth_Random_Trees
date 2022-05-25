@@ -64,4 +64,13 @@ for covar in covar_list:
     # plt.tight_layout()
     # plt.savefig('testing_14v/10_trees/subacc_plot_10_iter_'+str(covar)+'_0.428.png')
 
+    plt.figure(figsize=(15, 8))
+    ax = sns.histplot(x=str(covar), data=test_acc)
+    ax.yaxis.set_major_formatter(PercentFormatter(1))
+
+    ax2 = ax.twinx()
+    #sns.lineplot(x=x_, y=y_2, data=data2, marker='o', color='crimson', lw=3, ax=ax2)
+
+    plt.show()
+
 sns.pairplot(data=test_acc, hue="acc",diag_kind="hist")

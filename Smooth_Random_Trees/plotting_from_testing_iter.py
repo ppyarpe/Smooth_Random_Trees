@@ -12,7 +12,7 @@ import sklearn.metrics
 
 total_budgets_list = np.logspace(-1, 1, 20)
 ntree=10
-variables=['3','5','6','7','8','9','10','11','12','13','14']
+variables=['3','5','6','7','8','9','10','11','12','14']
 
 
 
@@ -30,7 +30,8 @@ for var in variables:
     plt.plot(perf_over['Budget'],perf_over['Accuracy'],'--',label='Accuracy')
     plt.scatter(perf_over['Budget'],perf_over['Accuracy'],s=20)
     plt.axhline(y = perf_np_over.iat[1,0], color = 'grey', linestyle = 'dashed')
-    plt.axis([0,10,0.72,0.86])
+    plt.axis([0,10,0.74,0.84])
+    plt.xscale('symlog')
     plt.xlabel("Privacy Loss")
     plt.legend()
     plt.show()
@@ -40,7 +41,8 @@ for var in variables:
     plt.plot(perf_over['Budget'],perf_over['ROC'],'--',color='orange',label='ROC')
     plt.scatter(perf_over['Budget'],perf_over['ROC'],color='orange',s=20)
     plt.axhline(y = perf_np_over.iat[1,1], color = 'grey', linestyle = 'dashed')
-    plt.axis([0,10,0.5,0.75])
+    plt.axis([0,10,0.5,0.70])
+    plt.xscale('symlog')
     plt.xlabel("Privacy Loss")
     plt.legend()
     plt.show()

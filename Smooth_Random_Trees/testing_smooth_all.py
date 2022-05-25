@@ -320,7 +320,7 @@ import matplotlib.pyplot as plt
 # train = train.values.tolist()
 # test = test.values.tolist()
 
-n_variables_list=[14]
+n_variables_list=[13]
 #[3,5,6,7,8,9,10,11,12,13,14]
 
 total_budgets_list = np.logspace(-1, 1, 20)
@@ -467,7 +467,7 @@ for n_variables in n_variables_list:
        
     #         forest_testing = DP_Random_Forest(train, test, cat, ntree, total_budget)
         
-    #         output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter.csv'
+    #         output_path='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/y_pred_budget_'+str(total_budget)+'_'+str(n_iter_tot)+'_iter_1.csv'
   
     
     #         y_pred=pd.DataFrame(forest_testing._predicted_labels)  
@@ -480,22 +480,23 @@ for n_variables in n_variables_list:
         
     #     y_pred_total.to_csv(output_path,index=False)
     #     perf_over = perf_over.append({'Budget':total_budget,'Accuracy':statistics.mean(perf['Accuracy']),'ROC':statistics.mean(perf['ROC'])}, ignore_index=True)
-    # output_path_1='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_mean_over_'+str(n_iter_tot)+'_iter.csv'
+    # output_path_1='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_mean_over_'+str(n_iter_tot)+'_iter_1.csv'
     # perf_over.to_csv(output_path_1,index=False)
             
         #getting non private limit
     y_pred_np_total=pd.DataFrame()    
+    perf_np=pd.DataFrame()  
     for n_iter in range (1,n_iter_tot+1):
         forest_testing_np = DP_Random_Forest(train, test, cat, ntree, 1000000000)
         y_pred_np=pd.DataFrame(forest_testing_np._predicted_labels) 
         y_pred_np_total=pd.concat([y_pred_np_total, y_pred_np], axis=1)
-        #perf_np = perf_np.append({'Accuracy':forest_testing._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred_np)}, ignore_index=True)
+        perf_np = perf_np.append({'Accuracy':forest_testing_np._accuracy,'ROC':sklearn.metrics.roc_auc_score(y,y_pred_np)}, ignore_index=True)
     
-    y_pred_np_total.to_csv('testing_14v/10_trees/y_pred_total_NP_10_iter.csv',index=False)
-    #perf_np_over=pd.DataFrame([statistics.mean(perf_np['Accuracy']),statistics.mean(perf_np['ROC'])])    
-    # perf_np_over={'Accuracy':statistics.mean(perf_np['Accuracy']),'ROC':statistics.mean(perf_np['ROC']) } 
-    # output_path_2='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_NP_'+str(n_iter_tot)+'_iter.csv'
-   
+   # y_pred_np_total.to_csv('testing_13v/10_trees/y_pred_total_NP_10_iter_1.csv',index=False)
+    perf_np_over=pd.DataFrame([statistics.mean(perf_np['Accuracy']),statistics.mean(perf_np['ROC'])])    
+    #perf_np_over={'Accuracy':statistics.mean(perf_np['Accuracy']),'ROC':statistics.mean(perf_np['ROC']) } 
+    output_path_2='testing_'+str(n_variables)+'v/'+str(ntree)+'_trees/performance_metrics_NP_'+str(n_iter_tot)+'_iter_1.csv'
+    perf_np_over.to_csv(output_path_2,index=False)
     
     # plt.figure(str(n_variables)+' Variables-Acc') 
     # plt.plot(perf_over['Budget'],perf_over['Accuracy'],'--',label='Accuracy')
