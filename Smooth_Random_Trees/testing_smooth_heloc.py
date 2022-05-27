@@ -300,58 +300,91 @@ y=heloc['RiskPerformance']
 heloc=heloc.drop(columns=['RiskPerformance'])
 
 #Removing rows with only missing values
-y=y[~(heloc.isnull().all(axis=1))]
-heloc=heloc[~(heloc.isnull().all(axis=1))]
+missing=~(heloc.isnull().all(axis=1))
 
+heloc = pd.read_csv('/Users/anaritapena/technical_study/Data/heloc_dataset_v1.csv')
+heloc=heloc.drop(columns=['RiskPerformance'])
+
+y=y[missing]
+heloc=heloc[missing]
+y=y.reset_index()
+heloc=heloc.reset_index()
+heloc=heloc.drop(columns=['index'])
+y=y.drop(columns=['index'])
+
+
+
+y.loc[y['RiskPerformance']=='Good','RiskPerformance']=1
+y.loc[y['RiskPerformance']=='Bad','RiskPerformance']=0
+# y.loc[y=='Good']=1
+# y.loc[y=='Bad']=0
+y=y.values.ravel()
 
 #Recoding categorical variables
-heloc["MaxDelq2PublicRecLast12M"].replace([0,1,2,3,4,7,8,9,6],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All other","All other","All other"],inplace=True)
-heloc["MaxDelqEver"].replace([2,3,4,5,6,8,9],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All other"],inplace=True)
+heloc["MaxDelq2PublicRecLast12M"].replace([0,1,2,3,4,7,8,9,6,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other","All Other","All Other"],inplace=True)
+heloc["MaxDelqEver"].replace([2,3,4,5,6,8,9,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other"],inplace=True)
+#heloc.replace([np.nan],[-9],inplace=True)
 
 heloc.MaxDelq2PublicRecLast12M = pd.Categorical(heloc.MaxDelq2PublicRecLast12M, 
-                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment",'All Other'],
+                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
                       ordered=True)
 
 heloc.MaxDelqEver = pd.Categorical(heloc.MaxDelqEver, 
-                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment",'All Other'],
+                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
                       ordered=True)
 
+
 data = pd.concat([pd.DataFrame(y), heloc], axis=1)
+
+for c in data.columns:
+    col_type = data[c].dtype
+    if col_type == 'object' or col_type.name == 'category':
+        data[c] = data[c].astype('category')
+
+
 train,test= train_test_split(data, test_size=0.20, random_state=314)
 
-# #transform categorical variables to be compatible with LightGBM
-# X = adult.drop(columns=['income'])
-# #X=X.drop(columns=[variables_dia[0]])
-# y=adult.income.to_frame()
-# for c in X.columns:
-#     col_type = X[c].dtype
+train.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv',index=False)
+test.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv',index=False)
+
+
+train = train.values.tolist()
+test = test.values.tolist()
+
+
+
+
+
+# # Read in already divided train and test datasets
+# train = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv')
+
+
+# for c in train.columns:
+#     col_type = train[c].dtype
 #     if col_type == 'object' or col_type.name == 'category':
-#         X[c] = X[c].astype('category')
-    
-# y.loc[y['income']=='>50K','income']=1
-# y.loc[y['income']=='<=50K','income']=0
-# y=y.values.ravel()
+#         train[c] = train[c].astype('category')
+
+ 
 
 
-# X = X.drop(columns=['age','workclass','fnlwgt','education','marital-status','occupation','capital-loss','race','gender','native-country','hours-per-week'])    
-
-# data = pd.concat([pd.DataFrame(y), X], axis=1)
-# train,test= train_test_split(data, test_size=0.20, random_state=314)
-
-# train = train.values.tolist()
-# test = test.values.tolist()
-
-## Read in already divided train and test datasets
-# train = pd.read_csv('train.csv',index_col=False)
-# train = train.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])    
+# #train = train.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])    
 # train = train.values.tolist()
 
-# test = pd.read_csv('test.csv',index_col=False)
-# test = test.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])
+# test = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv')
+
+
+# for c in test.columns:
+#     col_type = test[c].dtype
+#     if col_type == 'object' or col_type.name == 'category':
+#         test[c] = test[c].astype('category')  
+# #test = test.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])
 # test = test.values.tolist()
 
-# # forest_testing = DP_Random_Forest(train, test, [2,], 10, 0.1)
-# # print('accuracy = '+str(forest_testing._accuracy))
+
+
+
+forest_testing = DP_Random_Forest(train, test, [10,11,], 10, 0.1)
+print('accuracy = '+str(forest_testing._accuracy))
 
 
 

@@ -20,8 +20,9 @@ y_actual=pd.DataFrame(test['actual'])
 
 total_budgets_list = np.logspace(-1, 1, 20)
 
-covar_list=['actual']
-#['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
+covar_list=['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
+#['actual']
+
 #['fnlwgt']
 #['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
 
@@ -81,6 +82,8 @@ for covar in covar_list:
     test_acc['age'] = pd.cut(test_acc['age'], bins=range(17,100,10), labels=[f'{l}-{l+10}' for l in range(17,90,10)])
     test_acc['hours'] = pd.cut(test_acc['hours'], bins=range(0,100,10), labels=[f'{l}-{l+10}' for l in range(0,90,10)])
     test_acc['fnlwgt'] = pd.cut(test_acc['fnlwgt'], bins=range(10000,150000,10000), labels=[f'{l}-{l+10000}' for l in range(10000,140000,10000)])
+    test_acc['cap_gain'] = pd.cut(test_acc['cap_gain'], bins=range(0,100000,10000), labels=[f'{l}-{l+10000}' for l in range(0,90000,10000)])
+    test_acc['cap_loss'] = pd.cut(test_acc['cap_loss'], bins=range(0,5000,500), labels=[f'{l}-{l+10000}' for l in range(0,4500,500)])
 #ax = sns.countplot(x="age", data=test_acc)
     # plt.figure(figsize=(10,14))
     # sns.histplot(x=str(covar), data=test_acc,hue='acc',multiple="stack")
@@ -107,23 +110,50 @@ for covar in covar_list:
     mean_df = mean_df.reset_index()
 
 
+    #Option 1 of variance
 
-
-    # plt.figure(figsize=(15, 8))
-    ax = sns.histplot(x=str(covar), data=test_acc)
+    plt.figure(figsize=(15, 8))
+    ax = sns.histplot(x=str(covar), data=test_acc,alpha=0.2,color='gray')
     plt.xticks(rotation=90)
     #ax.yaxis.set_major_formatter(PercentFormatter(1))
 
     ax2 = ax.twinx()
-    sns.boxplot(x=str(covar), y="acc_1",data=test_acc, palette="Set3")
+    #sns.boxplot(x=str(covar), y="acc_1",data=test_acc, palette="Set3")
     #ax2.set(ylim=(0, 1.05))
+    sns.lineplot(x=str(covar), y='acc_1', data=test_acc, marker='o',palette="light:#5A9_r",ax=ax2,estimator="mean")
+                 
+                 #color='crimson', lw=2, ax=ax2)
+    sns.lineplot(x=str(covar), y='acc_2', data=test_acc, marker='o', palette="light:#5A9_r",ax=ax2,estimator="mean")
+                 #color='blue', lw=2, ax=ax2)
+    sns.lineplot(x=str(covar), y='acc_3', data=test_acc, marker='o', palette="light:#5A9_r",ax=ax2,estimator='mean')
+                 #color='orange', lw=2, ax=ax2)
+    # sns.pointplot(x=str(covar), y='acc_1', data=test_acc, join=False,color='crimson',ax=ax2)
+    # sns.pointplot(x=str(covar), y='acc_2', data=test_acc, join=False,color='blue',ax=ax2)
+    # sns.pointplot(x=str(covar), y='acc_3', data=test_acc, join=False,color='orange',ax=ax2)
+    ax2.legend(['DP=0.428', 'DP=7.848', 'NP-DP'])
+    ax2.set(ylabel='Accuracy')
+  
+    plt.tight_layout()
+    plt.savefig('testing_14v/10_trees/plots/variance/lineplots/10_iter_'+str(covar)+'_line.png')
+    
+    # plt.figure(figsize=(15, 8))
+    # ax = sns.histplot(x=str(covar), data=test_acc)
+    # plt.xticks(rotation=90)
+    # #ax.yaxis.set_major_formatter(PercentFormatter(1))
+
+    # ax2 = ax.twinx()
+    # #sns.boxplot(x=str(covar), y="acc_1",data=test_acc, palette="Set3")
+    # ax2.set(ylim=(0, 1.05))
     # sns.lineplot(x=str(covar), y='acc_1', data=mean_df, marker='o', color='crimson', lw=2, ax=ax2)
     # sns.lineplot(x=str(covar), y='acc_2', data=mean_df, marker='o', color='blue', lw=2, ax=ax2,)
     # sns.lineplot(x=str(covar), y='acc_3', data=mean_df, marker='o', color='orange', lw=2, ax=ax2)
+    # sns.pointplot(x=str(covar), y='acc_1', data=test_acc, join=False,color='crimson',ax=ax2,estimator=np.mean)
+    # sns.pointplot(x=str(covar), y='acc_2', data=test_acc, join=False,color='blue',ax=ax2,estimator=np.mean)
+    # sns.pointplot(x=str(covar), y='acc_3', data=test_acc, join=False,color='orange',ax=ax2,estimator=np.mean)
     # ax2.set(ylabel='Accuracy')
     # ax2.legend(['DP=0.428', 'DP=7.848', 'NP-DP'])
-    plt.tight_layout()
+    # plt.tight_layout()
 
-    sns.boxplot(x=str(covar), y="acc_1",data=test_acc, palette="Set3")
+   
    # plt.savefig('testing_14v/10_trees/plots/subacc_plot_10_iter_'+str(covar)+'_vary_scale.png')
 #sns.pairplot(data=test_acc, hue="acc",diag_kind="hist")
