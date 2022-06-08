@@ -292,122 +292,122 @@ from sklearn.preprocessing import MinMaxScaler
 
     
 #Read in dataset
-heloc = pd.read_csv('/Users/anaritapena/technical_study/Data/heloc_dataset_v1.csv',na_values=["-9", "-8"])
-variables_hel=(heloc.columns)
+# heloc = pd.read_csv('/Users/anaritapena/technical_study/Data/heloc_dataset_v1.csv',na_values=["-9", "-8"])
+# variables_hel=(heloc.columns)
 
-#Creating a separate target
-y=heloc['RiskPerformance']
-heloc=heloc.drop(columns=['RiskPerformance'])
+# #Creating a separate target
+# y=heloc['RiskPerformance']
+# heloc=heloc.drop(columns=['RiskPerformance'])
 
-#Removing rows with only missing values
-missing=~(heloc.isnull().all(axis=1))
+# #Removing rows with only missing values
+# missing=~(heloc.isnull().all(axis=1))
 
-heloc = pd.read_csv('/Users/anaritapena/technical_study/Data/heloc_dataset_v1.csv')
-heloc=heloc.drop(columns=['RiskPerformance'])
+# heloc = pd.read_csv('/Users/anaritapena/technical_study/Data/heloc_dataset_v1.csv')
+# heloc=heloc.drop(columns=['RiskPerformance'])
 
-y=y[missing]
-heloc=heloc[missing]
-y=y.reset_index()
-heloc=heloc.reset_index()
-heloc=heloc.drop(columns=['index'])
-y=y.drop(columns=['index'])
-
-
-
-y.loc[y['RiskPerformance']=='Good','RiskPerformance']=1
-y.loc[y['RiskPerformance']=='Bad','RiskPerformance']=0
-# y.loc[y=='Good']=1
-# y.loc[y=='Bad']=0
-y=y.values.ravel()
-
-#Recoding categorical variables
-heloc["MaxDelq2PublicRecLast12M"].replace([0,1,2,3,4,7,8,9,6,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other","All Other","All Other"],inplace=True)
-heloc["MaxDelqEver"].replace([2,3,4,5,6,8,9,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other"],inplace=True)
-#heloc.replace([np.nan],[-9],inplace=True)
-
-heloc.MaxDelq2PublicRecLast12M = pd.Categorical(heloc.MaxDelq2PublicRecLast12M, 
-                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
-                      ordered=True)
-
-heloc.MaxDelqEver = pd.Categorical(heloc.MaxDelqEver, 
-                      categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
-                      ordered=True)
-
-
-data = pd.concat([pd.DataFrame(y), heloc], axis=1)
-
-for c in data.columns:
-    col_type = data[c].dtype
-    if col_type == 'object' or col_type.name == 'category':
-        data[c] = data[c].astype('category')
-
-
-train,test= train_test_split(data, test_size=0.20, random_state=314)
-
-train.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv',index=False)
-test.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv',index=False)
-
-
-train = train.values.tolist()
-test = test.values.tolist()
+# y=y[missing]
+# heloc=heloc[missing]
+# y=y.reset_index()
+# heloc=heloc.reset_index()
+# heloc=heloc.drop(columns=['index'])
+# y=y.drop(columns=['index'])
 
 
 
+# y.loc[y['RiskPerformance']=='Good','RiskPerformance']=1
+# y.loc[y['RiskPerformance']=='Bad','RiskPerformance']=0
+# # y.loc[y=='Good']=1
+# # y.loc[y=='Bad']=0
+# y=y.values.ravel()
+
+# #Recoding categorical variables
+# heloc["MaxDelq2PublicRecLast12M"].replace([0,1,2,3,4,7,8,9,6,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other","All Other","All Other"],inplace=True)
+# heloc["MaxDelqEver"].replace([2,3,4,5,6,8,9,5],["Derogatory Comment","120+ Days Delinquent","90 Days Delinquent","60 Days Delinquent","30 Days Delinquent","Never Delinquent","All Other","All Other"],inplace=True)
+# #heloc.replace([np.nan],[-9],inplace=True)
+
+# heloc.MaxDelq2PublicRecLast12M = pd.Categorical(heloc.MaxDelq2PublicRecLast12M, 
+#                       categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
+#                       ordered=True)
+
+# heloc.MaxDelqEver = pd.Categorical(heloc.MaxDelqEver, 
+#                       categories=["Never Delinquent","30 Days Delinquent", "60 Days Delinquent","90 Days Delinquent","120+ Days Delinquent","Derogatory Comment","All Other"],
+#                       ordered=True)
 
 
-# # Read in already divided train and test datasets
-# train = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv')
+# data = pd.concat([pd.DataFrame(y), heloc], axis=1)
 
-
-# for c in train.columns:
-#     col_type = train[c].dtype
+# for c in data.columns:
+#     col_type = data[c].dtype
 #     if col_type == 'object' or col_type.name == 'category':
-#         train[c] = train[c].astype('category')
-
- 
+#         data[c] = data[c].astype('category')
 
 
-# #train = train.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])    
+# train,test= train_test_split(data, test_size=0.20, random_state=314)
+
+# train.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv',index=False)
+# test.to_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv',index=False)
+
+
 # train = train.values.tolist()
-
-# test = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv')
-
-
-# for c in test.columns:
-#     col_type = test[c].dtype
-#     if col_type == 'object' or col_type.name == 'category':
-#         test[c] = test[c].astype('category')  
-# #test = test.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])
 # test = test.values.tolist()
 
 
 
 
-forest_testing = DP_Random_Forest(train, test, [10,11,], 10, 0.1)
-print('accuracy = '+str(forest_testing._accuracy))
+
+# Read in already divided train and test datasets
+train = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/train.csv')
+
+
+for c in train.columns:
+    col_type = train[c].dtype
+    if col_type == 'object' or col_type.name == 'category':
+        train[c] = train[c].astype('category')
+
+ 
+
+
+# #train = train.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])    
+train = train.values.tolist()
+
+test = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/heloc/test.csv')
+
+
+for c in test.columns:
+    col_type = test[c].dtype
+    if col_type == 'object' or col_type.name == 'category':
+        test[c] = test[c].astype('category')  
+#test = test.drop(columns=['1','2','3','4','6','7','12','9','10','14','13'])
+test = test.values.tolist()
 
 
 
 
-# perf=pd.DataFrame(columns=['Budget','Accuracy'])
-
-# total_budgets_list = np.logspace(-1, 1, 20)
-# #[0.1,0.5,1,2,4,6,8,10]
-# ntree=50
-
-# for total_budget in total_budgets_list:
-#     forest_testing = DP_Random_Forest(train, test, [2,], ntree, total_budget)
-#     print(total_budget)
-#     perf = perf.append({'Budget': total_budget,'Accuracy':forest_testing._accuracy}, ignore_index=True)
-#     output_path='testing_3v/'+str(ntree)+'_trees/y_pred_full_budget_'+str(total_budget)+'.csv'
-#     y_pred=pd.DataFrame(forest_testing._predicted_labels)  
-#     y_pred.to_csv(output_path)
+# forest_testing = DP_Random_Forest(train, test, [10,11,], 10, 0.1)
+# print('accuracy = '+str(forest_testing._accuracy))
 
 
-# import matplotlib.pyplot as plt
-# plt.plot(perf['Budget'],perf['Accuracy'],'--',label='Accuracy')
-# plt.scatter(perf['Budget'],perf['Accuracy'],s=20)
-# plt.axis([0,10,0.7,1])
-# plt.xlabel("Privacy Loss")
-# plt.legend()
-# plt.show()
+
+
+perf=pd.DataFrame(columns=['Budget','Accuracy'])
+
+total_budgets_list = np.logspace(-1, 1, 20)
+#[0.1,0.5,1,2,4,6,8,10]
+ntree=10
+
+for total_budget in total_budgets_list:
+    forest_testing = DP_Random_Forest(train, test, [10,11], ntree, total_budget)
+    print(total_budget)
+    perf = perf.append({'Budget': total_budget,'Accuracy':forest_testing._accuracy}, ignore_index=True)
+    # output_path='testing_3v/'+str(ntree)+'_trees/y_pred_full_budget_'+str(total_budget)+'.csv'
+    # y_pred=pd.DataFrame(forest_testing._predicted_labels)  
+    # y_pred.to_csv(output_path)
+
+
+import matplotlib.pyplot as plt
+plt.plot(perf['Budget'],perf['Accuracy'],'--',label='Accuracy')
+plt.scatter(perf['Budget'],perf['Accuracy'],s=20)
+plt.axis([0,10,0.7,1])
+plt.xlabel("Privacy Loss")
+plt.legend()
+plt.show()

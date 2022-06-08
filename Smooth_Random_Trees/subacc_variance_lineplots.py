@@ -14,22 +14,25 @@ import statistics
 import sklearn.metrics
 
 #train = pd.read_csv('train.csv',index_col=False)
-test = pd.read_csv('test.csv',index_col=False)
-test.columns=['actual','age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
-y_actual=pd.DataFrame(test['actual'])
+test = pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/Synthetic Datasets/test.csv',index_col=False)
+
+test.columns=['default','gender','salary']
+#['actual','age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
+y_actual=pd.DataFrame(test['default'])
 
 total_budgets_list = np.logspace(-1, 1, 20)
 
-covar_list=['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
+covar_list=['default','gender','salary']
+#['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
 #['actual']
 
 #['fnlwgt']
 #['age','wrkcls','fnlwgt','edu','edu_num','mart_sts','occup','rel','race','gender','cap_gain','cap_loss','hours','native']
 
 #y_pred=pd.read_csv('testing_14v/10_trees/y_pred_budget_7.847599703514611_10_iter.csv')
-y_pred_1=pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/testing_14v/10_trees/y_pred_budget_0.42813323987193935_10_iter.csv')
-y_pred_2=pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/testing_14v/10_trees/y_pred_budget_7.847599703514611_10_iter.csv')
-y_pred_3=pd.read_csv('testing_14v/10_trees/y_pred_total_NP_10_iter.csv')
+y_pred_1=pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/Synthetic Datasets/y_pred_budget_0.42813323987193935_10_iter_10_trees.csv')
+y_pred_2=pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/Synthetic Datasets/y_pred_budget_7.847599703514611_10_iter_10_trees.csv')
+y_pred_3=pd.read_csv('/Users/anaritapena/Smooth_Random_Trees/Smooth_Random_Trees/Synthetic Datasets/y_pred_total_NP_10_iter_10_trees.csv')
 
 
 
@@ -79,12 +82,12 @@ for covar in covar_list:
     test_acc=pd.concat([test_acc,accu_3],axis=1)
     
     
-    test_acc['age'] = pd.cut(test_acc['age'], bins=range(17,100,10), labels=[f'{l}-{l+10}' for l in range(17,90,10)])
-    test_acc['hours'] = pd.cut(test_acc['hours'], bins=range(0,100,10), labels=[f'{l}-{l+10}' for l in range(0,90,10)])
-    test_acc['fnlwgt'] = pd.cut(test_acc['fnlwgt'], bins=range(10000,150000,10000), labels=[f'{l}-{l+10000}' for l in range(10000,140000,10000)])
-    test_acc['cap_gain'] = pd.cut(test_acc['cap_gain'], bins=range(0,100000,10000), labels=[f'{l}-{l+10000}' for l in range(0,90000,10000)])
-    test_acc['cap_loss'] = pd.cut(test_acc['cap_loss'], bins=range(0,5000,500), labels=[f'{l}-{l+10000}' for l in range(0,4500,500)])
-#ax = sns.countplot(x="age", data=test_acc)
+#     test_acc['age'] = pd.cut(test_acc['age'], bins=range(17,100,10), labels=[f'{l}-{l+10}' for l in range(17,90,10)])
+#     test_acc['hours'] = pd.cut(test_acc['hours'], bins=range(0,100,10), labels=[f'{l}-{l+10}' for l in range(0,90,10)])
+#     test_acc['fnlwgt'] = pd.cut(test_acc['fnlwgt'], bins=range(10000,150000,10000), labels=[f'{l}-{l+10000}' for l in range(10000,140000,10000)])
+#     test_acc['cap_gain'] = pd.cut(test_acc['cap_gain'], bins=range(0,100000,10000), labels=[f'{l}-{l+10000}' for l in range(0,90000,10000)])
+#     test_acc['cap_loss'] = pd.cut(test_acc['cap_loss'], bins=range(0,5000,500), labels=[f'{l}-{l+10000}' for l in range(0,4500,500)])
+# #ax = sns.countplot(x="age", data=test_acc)
     # plt.figure(figsize=(10,14))
     # sns.histplot(x=str(covar), data=test_acc,hue='acc',multiple="stack")
     # plt.title('Priv Loss=0.428')
@@ -134,7 +137,7 @@ for covar in covar_list:
     ax2.set(ylabel='Accuracy')
   
     plt.tight_layout()
-    plt.savefig('testing_14v/10_trees/plots/variance/lineplots/10_iter_'+str(covar)+'_line.png')
+    #plt.savefig('testing_14v/10_trees/plots/variance/lineplots/10_iter_'+str(covar)+'_line.png')
     
     # plt.figure(figsize=(15, 8))
     # ax = sns.histplot(x=str(covar), data=test_acc)
@@ -156,4 +159,8 @@ for covar in covar_list:
 
    
    # plt.savefig('testing_14v/10_trees/plots/subacc_plot_10_iter_'+str(covar)+'_vary_scale.png')
-#sns.pairplot(data=test_acc, hue="acc",diag_kind="hist")
+plt.figure()
+sns.pairplot(data=test_acc, hue="acc_1",diag_kind="hist")
+
+plt.figure()
+sns.histplot(x='salary',data=test,hue='gender')
